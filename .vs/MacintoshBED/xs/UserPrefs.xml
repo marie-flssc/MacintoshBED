@@ -1,0 +1,34 @@
+﻿<Properties StartupConfiguration="{DD97BF30-CE77-45BE-A1D0-46D3135A8383}|Default">
+  <MonoDevelop.Ide.ItemProperties.MacintoshBED PreferredExecutionTarget="/Applications/Safari.app" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Models/ForgotPassword.cs">
+    <Files>
+      <File FileName="Controllers/UsersController.cs" Line="150" Column="34" />
+      <File FileName="DTO/AuthenticateModel.cs" />
+      <File FileName="DTO/AccessLevel.cs" />
+      <File FileName="DTO/UpdateAccessLevelDTO.cs" />
+      <File FileName="DTO/SendEmailDTO.cs" />
+      <File FileName="Models/ForgotPassword.cs" Line="11" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="MacintoshBED" expanded="True">
+            <Node name="MacintoshBED" expanded="True">
+              <Node name="Controllers" expanded="True" />
+              <Node name="DTO" expanded="True" />
+              <Node name="Models" expanded="True">
+                <Node name="ForgotPassword.cs" selected="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
