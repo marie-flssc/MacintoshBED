@@ -1,17 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>c870e0d5-1ffb-4f31-83bb-7ea9d6eac65a</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>.</DockerfileContext>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
-    <PackageReference Include="AutoMapper" Version="10.1.1" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
-    <PackageReference Include="EntityFramework" Version="6.4.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.10.0" />
-    <PackageReference Include="SendGrid" Version="9.22.0" />
+    <PackageReference Include="AutoMapper" Version="9.0.0"/>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.0"/>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0"/>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9"/>
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.1"/>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3"/>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.6.0"/>
+    <PackageReference Include="SendGrid" Version="9.22.0"/>
   </ItemGroup>
 
   <ItemGroup>
