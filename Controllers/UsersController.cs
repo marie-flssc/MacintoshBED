@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Linq;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -112,6 +113,8 @@ namespace MacintoshBED.Controllers
             }
         }
 
+
+        [Authorize(Roles = AccessLevel.Admin)]
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -157,6 +160,7 @@ namespace MacintoshBED.Controllers
             }
         }
 
+        [Authorize(Roles = AccessLevel.Admin)]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
@@ -170,6 +174,8 @@ namespace MacintoshBED.Controllers
         {
             return Ok(_userService.ForgotPassword(model.Username));
         }
+
+
 
         [Authorize(Roles = AccessLevel.Admin)]
         [HttpPost("email")]
@@ -193,6 +199,39 @@ namespace MacintoshBED.Controllers
             }
         }
 
+        //To advertise , for both candidates and employers
+        [HttpPut("Advertise/{Advertise}")]
+        public IActionResult Avertise(bool Advertise)
+        {
+            int id = int.Parse(User.Identity.Name);
+            var user = _context.User.ToList().Find(x => x.Id == id);
+            user.Advertise = Advertise;
+            _context.User.Update(user);
+            _context.SaveChanges();
+            return Ok();
+
+        }
+
+
+
+        // FOR EMPLOYERS (and admin ?)
+        [Authorize(Roles= AccessLevel.Employer)]
+        [HttpGet("SeeAllCandidats")]
+        public IActionResult GetAllCandidates()
+        {
+            var users = _context.User.ToList().Where(x => x.AccessLevel == "Candidate").OrderByDescending(x => x.Advertise);
+            var model = _mapper.Map<IList<UserModel>>(users);
+            return Ok(model);
+        }
+
+        [Authorize(Roles= AccessLevel.Employer)]
+        [HttpGet("SeeACandidate/{id}")]
+        public IActionResult GetCandidateById(int id)
+        {
+            var user = _userService.GetById(id);
+            var model = _mapper.Map<UserModel>(user);
+            return Ok(model);
+        }
     }
 }
 

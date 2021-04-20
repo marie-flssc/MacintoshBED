@@ -9,5 +9,6 @@ namespace MacintoshBED.Models
         public int IdEmployee {get;set;}
         public int IdEmployer {get;set;}
         public int Pay {get;set;}
+        public bool Premium {get;set;}
     }
 }
