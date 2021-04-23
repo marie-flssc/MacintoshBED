@@ -31,7 +31,8 @@ namespace MacintoshBED.Controllers
             _mapper = mapper;
             Configuration = configuration;
         }
-    
+
+        // TODO : job offer to a candidate, candidate checks employer profile , apply for a job, accept or reject a job (in that case change the user.Available bool to false)
 
     }
 }

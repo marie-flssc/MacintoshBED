@@ -114,23 +114,6 @@ namespace MacintoshBED.Controllers
         }
 
 
-        [Authorize(Roles = AccessLevel.Admin)]
-        [HttpGet]
-        public IActionResult GetAll()
-        {
-            var users = _userService.GetAll();
-            var model = _mapper.Map<IList<UserModel>>(users);
-            return Ok(model);
-        }
-
-        [HttpGet("{id}")]
-        public IActionResult GetById(int id)
-        {
-            var user = _userService.GetById(id);
-            var model = _mapper.Map<UserModel>(user);
-            return Ok(model);
-        }
-
         [HttpPut("{id}")]
         public IActionResult Update(int id, UpdateModel model)
         {
@@ -158,14 +141,6 @@ namespace MacintoshBED.Controllers
                 // return error message if there was an exception
                 return BadRequest(new { message = ex.Message });
             }
-        }
-
-        [Authorize(Roles = AccessLevel.Admin)]
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            _userService.Delete(id);
-            return Ok();
         }
 
         [AllowAnonymous]
@@ -199,39 +174,7 @@ namespace MacintoshBED.Controllers
             }
         }
 
-        //To advertise , for both candidates and employers
-        [HttpPut("Advertise/{Advertise}")]
-        public IActionResult Avertise(bool Advertise)
-        {
-            int id = int.Parse(User.Identity.Name);
-            var user = _context.User.ToList().Find(x => x.Id == id);
-            user.Advertise = Advertise;
-            _context.User.Update(user);
-            _context.SaveChanges();
-            return Ok();
-
-        }
-
-
-
-        // FOR EMPLOYERS (and admin ?)
-        [Authorize(Roles= AccessLevel.Employer)]
-        [HttpGet("SeeAllCandidats")]
-        public IActionResult GetAllCandidates()
-        {
-            var users = _context.User.ToList().Where(x => x.AccessLevel == "Candidate").OrderByDescending(x => x.Advertise);
-            var model = _mapper.Map<IList<UserModel>>(users);
-            return Ok(model);
-        }
-
-        [Authorize(Roles= AccessLevel.Employer)]
-        [HttpGet("SeeACandidate/{id}")]
-        public IActionResult GetCandidateById(int id)
-        {
-            var user = _userService.GetById(id);
-            var model = _mapper.Map<UserModel>(user);
-            return Ok(model);
-        }
+        //TODO Delete your own account
     }
 }
 
