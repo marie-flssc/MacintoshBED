@@ -39,8 +39,10 @@ namespace MacintoshBED.Controllers
             Configuration = configuration;
         }
 
+        //For the employer to see all the candidates in a list
+
         [Authorize(Roles= AccessLevel.Employer)]
-        [HttpGet("SeeAllCandidates")]
+        [HttpGet("See All Candidates")]
         public IActionResult GetAllCandidates()
         {
             var users = _context.User.ToList().Where(x => x.AccessLevel == "Candidate").OrderByDescending(x => x.Advertise);
@@ -48,13 +50,59 @@ namespace MacintoshBED.Controllers
             return Ok(model);
         }
 
+        //For the employer to see all the candidates by id
+
         [Authorize(Roles= AccessLevel.Employer)]
-        [HttpGet("SeeACandidate/{id}")]
+        [HttpGet("See A Candidate/{id}")]
         public IActionResult GetCandidateById(int id)
         {
             var user = _userService.GetById(id);
-            var model = _mapper.Map<UserModel>(user);
+            if (user.AccessLevel != "Candidate" || user == null)
+            {
+                return Ok("Your request has been denied. This is either because the id you have entered is invalid, or is not a candidate's id.");
+            }
+            var model = new UserModel
+            {
+                Role = user.AccessLevel,
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Username = user.Username,
+                Skillset = user.Skillset,
+                Available = user.Available,
+                Rating = user.Rating,
+            };
+
+
             return Ok(model);
         }
+
+        /*[Authorize(Roles = AccessLevel.Employer)]
+        [HttpGet("See A Candidate/{name}")]
+        public IActionResult GetCandidateByNames(string name)
+        {
+            var user = _userService.GetByName(name);
+            if (user.AccessLevel != "Candidate" || user == null)
+            {
+                return Ok("Your request has been denied");
+            }
+            var model = new UserModel
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Username = user.Username,
+                Skillset = user.Skillset,
+                Available = user.Available,
+                Rating = user.Rating,
+            };
+
+
+            return Ok(model);
+        }
+        */
+        //For the employer to see a candidates profile
+
+
     }
 }

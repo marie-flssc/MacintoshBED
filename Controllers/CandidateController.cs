@@ -48,5 +48,42 @@ namespace MacintoshBED.Controllers
             _context.SaveChanges();
             return Ok();
         }
+
+        [Authorize(Roles = AccessLevel.Candidate)]
+        [HttpGet("See All Employers")]
+        public IActionResult GetAllEmployers()
+        {
+            var users = _context.User.ToList().Where(x => x.AccessLevel == "Employer").OrderByDescending(x => x.Advertise);
+            var model = _mapper.Map<IList<UserModel>>(users);
+            return Ok(model);
+        }
+
+        //For the employer to see all the candidates by id
+
+        [Authorize(Roles = AccessLevel.Candidate)]
+        [HttpGet("See An Employer/{id}")]
+        public IActionResult GetEmployerById(int id)
+        {
+            var user = _userService.GetById(id);
+            if (user.AccessLevel != "Employer" || user == null)
+            {
+                return Ok("Your request has been denied. This is either because the id you have entered is invalid, or is not a candidate's id.");
+            }
+            var model = new UserModel
+            {
+                Role = user.AccessLevel,
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Username = user.Username,
+                Skillset = user.Skillset,
+                Available = user.Available,
+                Rating = user.Rating,
+            };
+
+
+            return Ok(model);
+        }
+
     }
 }

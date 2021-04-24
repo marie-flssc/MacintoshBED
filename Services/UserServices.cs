@@ -14,6 +14,7 @@ namespace MacintoshBED.Services
         User Authenticate(string username, string password);
         IEnumerable<User> GetAll();
         User GetById(int id);
+        User GetByName(string name);
         User Create(User user, string password);
         void Update(User user, string currentPassword, string password, string confirmPassword);
         string ForgotPassword(string username);
@@ -63,6 +64,11 @@ namespace MacintoshBED.Services
         public User GetById(int id)
         {
             return _context.User.Find(id);
+        }
+
+        public User GetByName(string name)
+        {
+            return _context.User.Find(name);
         }
 
         public User Create(User user, string password)
@@ -213,6 +219,11 @@ namespace MacintoshBED.Services
                 hashstring += hashbyte.ToString("x2");
             }
             return hashstring;
+        }
+
+        public User GetByName(int name)
+        {
+            throw new NotImplementedException();
         }
     }
 }
