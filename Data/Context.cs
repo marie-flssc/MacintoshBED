@@ -9,6 +9,6 @@ namespace MacintoshBED.Data
         public DbSet<User> User { get; set; }
         public DbSet<JobDescription> Jobs {get;set;}
 
-        DbSet<Messages> Chat {get;set;}
+        public DbSet<Messages> Chat {get;set;}
     }
 }
