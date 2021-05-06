@@ -12,5 +12,7 @@ namespace MacintoshBED.DTO
         public string Skillset {get;set;}
         public bool Available {get;set;}
         public int Rating {get;set;}
+        public int NumberJobs {get;set;}
+        public string AccessLevel{get;set;}
     }
 }

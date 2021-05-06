@@ -8,7 +8,7 @@ namespace MacintoshBED.Data
         public Context(DbContextOptions<Context> options) : base(options) { }
         public DbSet<User> User { get; set; }
         public DbSet<JobDescription> Jobs {get;set;}
-
+        public DbSet<JobProposition> JobsProposition {get;set;}
         public DbSet<Messages> Chat {get;set;}
         public DbSet<Messages> MessageBox {get;set;}
     }
