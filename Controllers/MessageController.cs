@@ -77,7 +77,7 @@ namespace MacintoshBED.Controllers
         {
             int id = int.Parse(User.Identity.Name);
             var user = _userService.GetById(id);
-            var MessageBoxe = _context.Messageboxe.ToList().Where(x => x.User_ToName == user.Username).OrderByDescending(x => x.When);
+            var MessageBoxe = _context.MessageBox.ToList().Where(x => x.User_ToName == user.Username).OrderByDescending(x => x.When);
             var model = _mapper.Map<IList<MessageBoxe>>(MessageBoxe);
             return Ok(model);
         }
@@ -95,7 +95,7 @@ namespace MacintoshBED.Controllers
                subject = model.subject,
                When = DateTime.Now
             };
-            _context.Messageboxe.Add(modelMessage);
+            _context.MessageBox.Add(modelMessage);
             _context.SaveChanges();
             return Ok();
         }
