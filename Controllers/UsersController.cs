@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Linq;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -162,7 +164,7 @@ namespace MacintoshBED.Controllers
                 emails.Add(item);
             }
             
-            var response = await _emailService.SendEmailAsync(emails, model.Subject, model.Message);
+            var response = await _emailService.SendEmailAsync("hamza.gaizi@hotmail.com",emails, model.Subject, model.Message);
 
             if (response.StatusCode == System.Net.HttpStatusCode.Accepted)
             {

@@ -6,7 +6,8 @@ using System.Text;
 using MacintoshBED.Helpers;
 using MacintoshBED.Models;
 using MacintoshBED.Data;
-
+using SendGrid;
+using SendGrid.Helpers.Mail;
 namespace MacintoshBED.Services
 {
     public interface IUserService
