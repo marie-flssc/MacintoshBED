@@ -35,7 +35,7 @@ namespace MacintoshBED.Controllers
 
 
         // TODO : job offer to a candidate, candidate checks employer profile , apply for a job, accept or reject a job (in that case change the user.Available bool to false)
-        [Authorize(Roles= AccessLevel.Employer)]
+        [Authorize(Roles = "Employer, Admin")]
         [HttpPost("NewJob")]
         public IActionResult NewJob(JobDTO newjob)
         {

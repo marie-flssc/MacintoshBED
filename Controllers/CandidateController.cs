@@ -37,7 +37,7 @@ namespace MacintoshBED.Controllers
         }
 
 
-        [Authorize(Roles = AccessLevel.Candidate)]
+        [Authorize(Roles = "Candidate, Admin")]
         [HttpPut("Advertise/{Advertise}")]
         public IActionResult Avertise(bool Advertise)
         {
@@ -49,7 +49,7 @@ namespace MacintoshBED.Controllers
             return Ok();
         }
 
-        [Authorize(Roles = AccessLevel.Candidate)]
+        [Authorize(Roles = "Candidate, Admin")]
         [HttpGet("See All Employers")]
         public IActionResult GetAllEmployers()
         {
@@ -60,7 +60,7 @@ namespace MacintoshBED.Controllers
 
         //For the employer to see all the candidates by id
 
-        [Authorize(Roles = AccessLevel.Candidate)]
+        [Authorize(Roles = "Candidate, Admin")]
         [HttpGet("See An Employer/{id}")]
         public IActionResult GetEmployerById(int id)
         {

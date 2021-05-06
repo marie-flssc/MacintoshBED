@@ -41,7 +41,7 @@ namespace MacintoshBED.Controllers
 
         //For the employer to see all the candidates in a list
 
-        [Authorize(Roles= AccessLevel.Employer)]
+        [Authorize(Roles = "Employer, Admin")]
         [HttpGet("See All Candidates")]
         public IActionResult GetAllCandidates()
         {
@@ -52,7 +52,7 @@ namespace MacintoshBED.Controllers
 
         //For the employer to see all the candidates by id
 
-        [Authorize(Roles= AccessLevel.Employer)]
+        [Authorize(Roles = "Employer, Admin")]
         [HttpGet("See A Candidate/{id}")]
         public IActionResult GetCandidateById(int id)
         {
