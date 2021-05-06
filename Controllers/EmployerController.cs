@@ -42,7 +42,7 @@ namespace MacintoshBED.Controllers
         //For the employer to see all the candidates in a list
 
         [Authorize(Roles = "Employer, Admin")]
-        [HttpGet("See All Candidates")]
+        [HttpGet("SeeAllCandidates")]
         public IActionResult GetAllCandidates()
         {
             var users = _context.User.ToList().Where(x => x.AccessLevel == "Candidate").OrderByDescending(x => x.Advertise);
@@ -53,7 +53,7 @@ namespace MacintoshBED.Controllers
         //For the employer to see all the candidates by id
 
         [Authorize(Roles = "Employer, Admin")]
-        [HttpGet("See A Candidate/{id}")]
+        [HttpGet("SeeACandidate/{id}")]
         public IActionResult GetCandidateById(int id)
         {
             var user = _userService.GetById(id);

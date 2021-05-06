@@ -19,14 +19,15 @@ namespace MacintoshBED.Models
         [RegularExpression(@"/^(?=.*[A-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@])(?!.*[iIoO])\S{6,12}$/")]
         public string Password {get;set;}
         public string PasswordHash { get; set; }
+        [Required]
         public string AccessLevel { get; set; }
         public string Token { get; set; }
         public int Rating {get;set;}
+        public int NumberJobs {get;set;}
         //for candidates
         public string Skillset {get;set;}
         public bool Available {get;set;}
         public bool Advertise {get;set;}
-        //for employers
-        public List<JobDescription> Jobs {get;set;}
+        public int Money {get;set;}
     }
 }

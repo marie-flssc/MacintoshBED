@@ -38,7 +38,7 @@ namespace MacintoshBED.Controllers
 
 
         [Authorize(Roles = "Candidate, Admin")]
-        [HttpPut("Advertise/{Advertise}")]
+        [HttpPut("Advertise/{id}")]
         public IActionResult Avertise(bool Advertise)
         {
             int id = int.Parse(User.Identity.Name);
@@ -50,7 +50,7 @@ namespace MacintoshBED.Controllers
         }
 
         [Authorize(Roles = "Candidate, Admin")]
-        [HttpGet("See All Employers")]
+        [HttpGet("SeeAllEmployers")]
         public IActionResult GetAllEmployers()
         {
             var users = _context.User.ToList().Where(x => x.AccessLevel == "Employer").OrderByDescending(x => x.Advertise);
@@ -61,7 +61,7 @@ namespace MacintoshBED.Controllers
         //For the employer to see all the candidates by id
 
         [Authorize(Roles = "Candidate, Admin")]
-        [HttpGet("See An Employer/{id}")]
+        [HttpGet("SeeAnEmployer/{id}")]
         public IActionResult GetEmployerById(int id)
         {
             var user = _userService.GetById(id);
@@ -84,6 +84,20 @@ namespace MacintoshBED.Controllers
 
             return Ok(model);
         }
+        
+        [Authorize(Roles = AccessLevel.Candidate)]
+        [HttpGet("SeeEmployersJobs/{id}")]
+        public IActionResult GetJobsByEmployerId(int id)
+        {
+            var user = _userService.GetById(id);
+            if (user.AccessLevel != "Employer" || user == null)
+            {
+                return Ok("Your request has been denied. This is either because the id you have entered is invalid, or is not a employer's id.");
+            }
 
+            List<JobDescription> model = _context.Jobs.ToList().FindAll(a => a.IdEmployer == id);
+
+            return Ok(model);
+        }
     }
 }
