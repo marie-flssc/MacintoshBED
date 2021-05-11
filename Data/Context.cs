@@ -11,5 +11,6 @@ namespace MacintoshBED.Data
         public DbSet<JobProposition> JobsProposition {get;set;}
         public DbSet<Messages> Chat {get;set;}
         public DbSet<MessageBoxe> MessageBox {get;set;}
+        public DbSet<JobApplication> JobApplication {get;set;}
     }
 }

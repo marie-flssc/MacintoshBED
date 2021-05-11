@@ -71,7 +71,6 @@ namespace MacintoshBED.Controllers
             }
             var model = new UserModel
             {
-                Role = user.AccessLevel,
                 Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,

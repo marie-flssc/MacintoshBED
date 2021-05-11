@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 using AutoMapper;
 using MacintoshBED.Data;
 using MacintoshBED.DTO;
@@ -11,6 +12,7 @@ using MacintoshBED.Models;
 using MacintoshBED.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -35,7 +37,6 @@ namespace MacintoshBED.Controllers
         }
 
 
-        // TODO :apply for a job
         [Authorize(Roles = "Employer, Admin")]
         [HttpPost("NewJob")]
         public IActionResult NewJob(JobDTO newjob)
@@ -53,6 +54,30 @@ namespace MacintoshBED.Controllers
             return Ok(job);
 
         }
+
+
+        [Authorize(Roles= AccessLevel.Candidate)]
+        [HttpPost("JobApply")]
+        public IActionResult ApplyJob(JobPropositionDTO jobprop)
+        {
+            if(!_context.User.ToList().Find(x => x.Id == jobprop.CandidateId).Available)
+            {
+                return NotFound("You are not available");
+            }
+            if(_context.Jobs.ToList().Find(x => x.Id == jobprop.JobId).Accepted)
+            {
+                return NotFound("The job is already taken");
+            }
+            int ID = int.Parse(User.Identity.Name);
+            var job = new JobApplication {
+                CandidateId = jobprop.CandidateId,
+                JobId = jobprop.JobId
+            };
+            _context.JobApplication.Add(job);
+            _context.SaveChanges();
+            return Ok(job);
+        }
+
         [Authorize(Roles= AccessLevel.Employer)]
         [HttpPost("JobOffer")]
         public IActionResult ProposeJob(JobPropositionDTO jobprop)
@@ -71,6 +96,16 @@ namespace MacintoshBED.Controllers
             return Ok(job);
         }
 
+
+        [Authorize(Roles= "Candidate,Admin")]
+        [HttpGet("SeeAllJobs")]
+        public IActionResult SeeAllJobs()
+        {   
+            var jobs = _context.Jobs.ToList().RemoveAll(x=>x.Accepted);
+            var model = _mapper.Map<IList<JobDescription>>(jobs);
+            return Ok(model);
+        }
+
         [Authorize(Roles= AccessLevel.Candidate)]
         [HttpGet("GetPersonnalOffers")]
         public IActionResult SeeAllOffers()
@@ -83,7 +118,7 @@ namespace MacintoshBED.Controllers
         }
 
         [Authorize(Roles = AccessLevel.Candidate)]
-        [HttpGet("{id}")]
+        [HttpGet("GetOfferById{id}")]
         public IActionResult GetOfferById(int id)
         {
             var job = _context.JobsProposition.ToList().Find(x => x.Id == id);
@@ -97,6 +132,28 @@ namespace MacintoshBED.Controllers
         {
             var job = _context.JobsProposition.ToList().Find(x => x.Id == id);
             var model = _mapper.Map<JobProposition>(job);
+            if(_context.Jobs.ToList().Find(x => x.Id == job.JobId).Accepted)
+            {
+                return NotFound();
+            }
+            else{
+                var user = _context.User.ToList().Find(x => x.Id == job.CandidateId);
+                user.Available = true;
+                _context.User.Update(user);
+                _context.SaveChanges();
+                var accept =  _context.Jobs.ToList().Find(x => x.Id == job.JobId);
+                _context.Jobs.Update(accept);
+                _context.SaveChanges();
+            }
+            return Ok();
+        }
+
+        [Authorize(Roles = AccessLevel.Employer)]
+        [HttpPut("AcceptCandidate")]
+        public IActionResult AcceptCandidate(int id)
+        {
+            var job = _context.JobApplication.ToList().Find(x => x.Id == id);
+            var model = _mapper.Map<JobApplication>(job);
             if(_context.Jobs.ToList().Find(x => x.Id == job.JobId).Accepted)
             {
                 return NotFound();
@@ -163,5 +220,56 @@ namespace MacintoshBED.Controllers
             return Ok(job);
         }
 
+        [Authorize(Roles = AccessLevel.Employer)]
+        [HttpDelete("DeleteJob")]
+        public async Task<IActionResult> DeleteJob(int id)
+        {
+            int iduser = getUserId();
+            var job = await _context.Jobs.SingleOrDefaultAsync(x => x.Id ==id);
+            if(job == null)
+            {
+                return NotFound();
+            }
+            //If the user is not the employer of the given job or if they are not an admin
+            if(_context.Jobs.ToList().Find(w=>w.Id == id).IdEmployer != iduser || _context.User.ToList().Find(w=>w.Id == iduser).AccessLevel != "Admin")
+            {
+                return NotFound("You do not have the authorization to delete this");
+            }
+            _context.Jobs.Remove(job);
+            await _context.SaveChangesAsync();
+            var jobap = _context.JobsProposition.ToList().FindAll(x => x.JobId ==id);
+            foreach(var j in jobap)
+            {
+                _context.JobsProposition.Remove(j);
+                await _context.SaveChangesAsync();
+            }
+
+            return Ok(job);
+        }
+
+        [Authorize(Roles = "Employer")]
+        [HttpPut("AdvertiseJob/{id}")]
+        public IActionResult Advertise(int id, bool adv)
+        {
+            var job = _context.Jobs.ToList().Find(x => x.Id == id);
+            job.Premium = adv;
+            _context.Jobs.Update(job);
+            _context.SaveChanges();
+            return Ok();
+        }
+
+        private int getUserId()
+        {
+            try
+            {
+                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var user = _context.User.ToList().Find(x => x.Username.Equals(userId));
+                return user.Id;
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
+        }
     }
 }

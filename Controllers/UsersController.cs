@@ -99,6 +99,10 @@ namespace MacintoshBED.Controllers
         [HttpPost("register")]
         public IActionResult Register([FromBody] RegisterModel model)
         {
+            if (model.AccessLevel != "Employer" && model.AccessLevel!="Candidate")
+            {
+                return BadRequest(new { message = "You can only create a profile as an Employer or a Candidate" });
+            }
             // map model to entity
             var user = _mapper.Map<User>(model);
 
@@ -116,18 +120,18 @@ namespace MacintoshBED.Controllers
         }
 
 
-        [HttpPut("{id}")]
+        [HttpPut("Update{id}")]
         public IActionResult Update(int id, UpdateModel model)
         {
             //Finding who is logged in
             int logged_in_user = int.Parse(User.Identity.Name);
-
+            User loginuser = _context.User.ToList().Find(a=>a.Id == logged_in_user);
             // map model to entity and set id
             var user = _mapper.Map<User>(model);
             user.Id = id;
 
             //Rejecting access if the logged in user is not same as the user updating information
-            if (logged_in_user != id)
+            if (loginuser.AccessLevel !="Admin"||logged_in_user != id)
             {
                 return BadRequest(new { message = "Access Denied" });
             }

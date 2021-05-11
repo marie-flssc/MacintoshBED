@@ -71,7 +71,7 @@ namespace MacintoshBED.Controllers
 
 
         [Authorize(Roles = AccessLevel.Admin)]
-        [HttpGet]
+        [HttpGet("GetAllUsers")]
         public IActionResult GetAll()
         {
             var users = _userService.GetAll();
@@ -80,7 +80,7 @@ namespace MacintoshBED.Controllers
         }
 
         [Authorize(Roles = AccessLevel.Admin)]
-        [HttpGet("{id}")]
+        [HttpGet("GetUserById{id}")]
         public IActionResult GetById(int id)
         {
             var user = _userService.GetById(id);
