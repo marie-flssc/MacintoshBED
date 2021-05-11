@@ -164,7 +164,7 @@ namespace MacintoshBED.Controllers
                 emails.Add(item);
             }
             
-            var response = await _emailService.SendEmailAsync(emails, model.Subject, model.Message);
+            var response = await _emailService.SendEmailAsync("hamza.gaizi@epita.com",emails, model.Subject, model.Message);
 
             if (response.StatusCode == System.Net.HttpStatusCode.Accepted)
             {

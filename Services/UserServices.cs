@@ -191,7 +191,7 @@ namespace MacintoshBED.Services
                     var emailSubject = "Password Recovery";
                     var messageBody = token;
                     
-                    var response = _emailService.SendEmailAsync(emailAddress, emailSubject, messageBody);
+                    var response = _emailService.SendEmailAsync("hamza.gaizi@epita.com",emailAddress, emailSubject, messageBody);
                     System.Console.WriteLine(response.Result.StatusCode);
 
                     if (response.IsCompletedSuccessfully)
