@@ -21,6 +21,7 @@ namespace MacintoshBED.Services
         string ForgotPassword(string username);
         User ResetPassword(string username, string currentPassword, string password, string confirmPassword);
         void Delete(int id);
+        bool ValidId(int userId);
     }
 
     public class UserService : IUserService
@@ -224,6 +225,15 @@ namespace MacintoshBED.Services
         public User GetByName(int name)
         {
             throw new NotImplementedException();
+        }
+
+        public bool ValidId(int id)
+        {
+            if (GetById(id) == null)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

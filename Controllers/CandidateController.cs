@@ -84,8 +84,8 @@ namespace MacintoshBED.Controllers
 
             return Ok(model);
         }
-        
-        [Authorize(Roles = AccessLevel.Candidate)]
+
+        [Authorize(Roles = "Candidate, Admin")]
         [HttpGet("SeeEmployersJobs/{id}")]
         public IActionResult GetJobsByEmployerId(int id)
         {

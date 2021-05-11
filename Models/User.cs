@@ -29,5 +29,6 @@ namespace MacintoshBED.Models
         public bool Available {get;set;}
         public bool Advertise {get;set;}
         public int Money {get;set;}
+        public bool Banned { get; set; }
     }
 }

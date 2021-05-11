@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace MacintoshBED.Controllers
 {
@@ -37,11 +38,35 @@ namespace MacintoshBED.Controllers
         }
 
         [Authorize(Roles = AccessLevel.Admin)]
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        [HttpPost("Ban")]
+        public async Task<ActionResult> BanUser(int userId)
         {
-            _userService.Delete(id);
-            return Ok();
+            if (_userService.ValidId(userId))
+            {
+                User user = _userService.GetById(userId);
+                user.Banned = true;
+                _context.Entry(user).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return Ok(new { message = "Successfully banned user " + userId });
+            }
+            return BadRequest(new { message = "The user id is invalid !" });
+        }
+
+        [Authorize(Roles = AccessLevel.Admin)]
+        [HttpDelete("HardDelete")]
+        public async Task<ActionResult<User>> HardDelete(int id)
+        {
+            var user = await _context.User.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                _context.User.Remove(user);
+                await _context.SaveChangesAsync();
+                return user;
+            }
         }
 
 
