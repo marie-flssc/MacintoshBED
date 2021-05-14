@@ -34,7 +34,7 @@ namespace MacintoshBED.Services
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
-                From = new EmailAddress("juliencalisto@gmail.com", FromEmail),
+                From = new EmailAddress("hamza.gaizi@hotmail.com", FromEmail),
                 Subject = subject,
                 PlainTextContent = message,
                 HtmlContent = message
