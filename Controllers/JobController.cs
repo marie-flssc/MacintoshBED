@@ -100,10 +100,11 @@ namespace MacintoshBED.Controllers
         [Authorize(Roles= "Candidate,Admin")]
         [HttpGet("SeeAllJobs")]
         public IActionResult SeeAllJobs()
-        {   
-            var jobs = _context.Jobs.ToList().RemoveAll(x=>x.Accepted);
-            var model = _mapper.Map<IList<JobDescription>>(jobs);
-            return Ok(model);
+        {
+            var jobs = _context.Jobs;
+                //.ToList().RemoveAll(x=>x.Accepted);
+            //var model = _mapper.Map<IList<JobDescription>>(jobs);
+            return Ok(jobs);
         }
 
         [Authorize(Roles= AccessLevel.Candidate)]
@@ -152,7 +153,7 @@ namespace MacintoshBED.Controllers
         [HttpPut("AcceptCandidate")]
         public IActionResult AcceptCandidate(int id)
         {
-            var job = _context.JobApplication.ToList().Find(x => x.Id == id);
+            var job = _context.JobApplication.ToList().Find(x => x.CandidateId == id);
             var model = _mapper.Map<JobApplication>(job);
             if(_context.Jobs.ToList().Find(x => x.Id == job.JobId).Accepted)
             {
@@ -231,7 +232,7 @@ namespace MacintoshBED.Controllers
                 return NotFound();
             }
             //If the user is not the employer of the given job or if they are not an admin
-            if(_context.Jobs.ToList().Find(w=>w.Id == id).IdEmployer != iduser || _context.User.ToList().Find(w=>w.Id == iduser).AccessLevel != "Admin")
+            if(_context.Jobs.ToList().Find(w=>w.Id == id).IdEmployer != iduser && _context.User.ToList().Find(w=>w.Id == iduser).AccessLevel != "Admin")
             {
                 return NotFound("You do not have the authorization to delete this");
             }
@@ -262,9 +263,7 @@ namespace MacintoshBED.Controllers
         {
             try
             {
-                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var user = _context.User.ToList().Find(x => x.Username.Equals(userId));
-                return user.Id;
+                return int.Parse(User.Identity.Name);
             }
             catch (Exception)
             {
