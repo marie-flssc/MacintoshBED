@@ -101,7 +101,7 @@ namespace MacintoshBED.Controllers
         [HttpGet("SeeAllJobs")]
         public IActionResult SeeAllJobs()
         {
-            var jobs = _context.Jobs;
+            var jobs = _context.Jobs.OrderByDescending(x => x.Premium);;
                 //.ToList().RemoveAll(x=>x.Accepted);
             //var model = _mapper.Map<IList<JobDescription>>(jobs);
             return Ok(jobs);
