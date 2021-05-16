@@ -172,6 +172,7 @@ namespace MacintoshBED.Controllers
         }
 
         [HttpPost("RateJob")]
+        [Authorize(Roles = "Candidate, Employer")]
         public ActionResult RateJob(int jobOfferId, [FromQuery] int rating)
         {
             int currentId = int.Parse(User.Identity.Name);
@@ -181,15 +182,21 @@ namespace MacintoshBED.Controllers
             var jobOffer = _context.Jobs.Find(jobOfferId);
             if (jobOffer == null)
                 return NotFound();
-            
+            if(!jobOffer.Ended)
+                return BadRequest("This job is not over");
             if (User.IsInRole("Candidate"))
             {
                 if (!jobOffer.Accepted || !_context.Jobs.Any(a => a.IdEmployee == currentId && a.Accepted))
-                    return BadRequest("You were not accepted for this job offers.");
+                    return BadRequest("You were not accepted for this job offer.");
+                if(jobOffer.REmployee)
+                    return BadRequest("This job employer is already rated");
                 var idemployer = _context.Jobs.ToList().Find(a => a.Id == jobOffer.Id).IdEmployer;
                 var employer = _context.User.ToList().Find(a => a.Id == idemployer);
                 employer.Rating = employer.Rating + rating / employer.NumberJobs;
-                _context.Add(employer);
+                _context.User.Update(employer);
+                _context.SaveChanges();
+                jobOffer.REmployee = true;
+                _context.Jobs.Update(jobOffer);
                 _context.SaveChanges();
                 return Ok();
             }
@@ -197,13 +204,19 @@ namespace MacintoshBED.Controllers
             {
                 if (!jobOffer.Accepted || jobOffer.IdEmployer != currentId)
                     return BadRequest("You are not the employer for this job.");
+                if(jobOffer.REmployer)
+                    return BadRequest("This job employee is already rated");
                 var idemployee = _context.Jobs.ToList().Find(a => a.Id == jobOffer.Id).IdEmployee;
                 var employee = _context.User.ToList().Find(a => a.Id == idemployee);
                 employee.Rating = employee.Rating + rating / employee.NumberJobs;
                 _context.Add(employee);
                 _context.SaveChanges();
+                jobOffer.REmployer = true;
+                _context.Jobs.Update(jobOffer);
+                _context.SaveChanges();
                 return Ok();
             }
+            
         }
 
         [Authorize(Roles = AccessLevel.Employer)]

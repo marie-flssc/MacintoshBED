@@ -10,5 +10,7 @@ namespace MacintoshBED.Models
         public int IdEmployer {get;set;}
         public int Pay {get;set;}
         public bool Premium {get;set;}
+        public bool REmployee {get;set;}
+        public bool REmployer {get;set;}
     }
 }
